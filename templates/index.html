@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+        
+        <!-- Form to Add New Task -->
+        <form action="{{ url_for('add_task') }}" method="POST" class="add-task-form">
+            <input type="text" name="content" placeholder="Enter task content" required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <!-- List of Tasks -->
+        <div class="task-list">
+            {% if tasks %}
+                {% for task in tasks %}
+                    <div class="task {% if task.completed %}finished{% endif %}">
+                        <span>{{ task.content }}</span>
+                        <div class="task-actions">
+                            {% if not task.completed %}
+                                <!-- Mark as Finished Button Form -->
+                                <form action="{{ url_for('mark_as_finished', task_id=task.id) }}" method="POST">
+                                    <button type="submit">Finished</button>
+                                </form>
+                            {% endif %}
+                            
+                            <!-- Delete Button Form (for deleting tasks) -->
+                            <form action="{{ url_for('delete_task', task_id=task.id) }}" method="POST">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No tasks found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+
+
+
